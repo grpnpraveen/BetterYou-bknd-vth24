@@ -114,7 +114,6 @@ class ValidateInputs:
 
         validation_keys = list(validations.keys())
         validation_messages = list()
-
         for value in validation_keys:
             if not isinstance(data[value], validations[value]):
                 validation_messages.append(value + " should be a " + str(validations[value]))
