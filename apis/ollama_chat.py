@@ -16,6 +16,7 @@ if not "llama3.1" in ollama.list().get("models"):
     ollama.pull("llama3.1")                                                            
 
 
+gis = GoogleImagesSearch(Config.GCP_API_KEY, Config.SEARCH_ENGINE_ID)
 
 
 @generate_api.route("/api/generate_diet_plan/<username>", methods=["GET"])
@@ -23,9 +24,7 @@ def generate_diet_plan(username):
     '''
         To generate diet plan
     '''
-    # return Response(json.dumps({"message": "Please provide user prompt"}),
-    #                 mimetype="application/json",
-    #                 status=200)
+
     user_details = get_user({"user_name": username})
     request_json = request.get_json()
     user_prompt = request_json.get("user_prompt")
@@ -37,7 +36,7 @@ def generate_diet_plan(username):
                     status=200)
 
 def create_user_prefix_prompt(data):
-    user_details_prefix_prompt = "Type your message: Give help you with a healthy diet plan and exercises that are beneficial for your overall health, by the way if you need my details, here they are \n "
+    user_details_prefix_prompt = "You are Meta AI, a friendly AI Assistant. Today's date is {Saturday, September 14, 2024}. Respond to the input as a friendly AI assistant, generating human-like text, and follow the instructions in the input if applicable. Keep the response concise and engaging, using Markdown when appropriate. The user live in {Country}, so be aware of the local context and preferences. Use a conversational tone and provide helpful and informative responses, utilizing external knowledge when necessary. Give help you with a healthy diet plan and exercises that are beneficial for your overall health, by the way if you need my details, here they are \n "
     for key, value in data["data"].items():
         if value is None:
             continue
@@ -52,9 +51,8 @@ def create_user_prefix_prompt(data):
 
 def generate_recipe_recommendation(user_details_prefix_prompt, user_prompt=None):
     if user_prompt is None:
-        user_prompt = ". Can you please provide some recommendations?"
+        user_prompt = ". Can you please provide some diet and food recommendations? Put the schedule in a json format for all days in the week. No other keys in the json instead of days of the week. Make sure there are not json decode error. Fill it with dishes closer to my preference. Don't leave it half empty and add comments like continue for the rest of the week/ similar to the otherday. do not add comments. example: {\'monday':{\'breakfast':{\'time':'', 'dish_name':etc...'}\}\}."
     bot_input = user_details_prefix_prompt + user_prompt
-    print("Bot input: ", bot_input)
 
 
     # Ensure bot_input is a list of dictionaries
@@ -64,49 +62,42 @@ def generate_recipe_recommendation(user_details_prefix_prompt, user_prompt=None)
     bot_response = ""
     for chunk in stream:
         content = chunk["message"]["content"]
-        print(content, end='', flush='')  
+        # print(content, end='', flush='')  
         bot_response += content
     print(bot_response)
-    return bot_response
-#     messages = []
-#     message={"role":"user","content":"""Please help me with healthy diet plan \ 
-#  gender is Male. age is 22. religion is hindu. sex is hetero. occupation is student. height is 6 feet. weight is 120 kg. medical_condition is None. mental_health is None. physical_activity_level is normal. habits is None. time_comitment is 30 mins. My preferred food is All. add that atleat twice a week. preferred_food is All. preferred_cusine is None. preferred_exercise is None. ideal_weight is 90 kgs. ideal_fitness_level is able to run marathon. . Can you please provide some recommendations?
-# I'd be happy to help you with a healthy diet plan."""}   
-
-#     messages.append(message)                                                            # Append message to the log
-#     stream=ollama.chat(model="llama3.1",messages=messages,stream=True)                 # Call the Ollama server and return a stream
-#     ai_response=[]                                                                      # This contains AI Response chunks
-#     for chunk in stream:                                                                # Iterate through the stream
-#         content=chunk["message"]["content"]                                             # Get the content from the server response
-#         ai_response.append(content)                                                     # Append the content to the AI Response
-#         print(content,end='',flush='')                                                  # Print each chunk in the stream
-#     messages.append({"role":"assistant","content":"".join(ai_response)})  
-#     return ai_response
-
-
-
-
-# # you can provide API key and CX using arguments,
-# # or you can set environment variables: GCS_DEVELOPER_KEY, GCS_CX
-# gis = GoogleImagesSearch(Config.GCP_API_KEY, Config.SEARCH_ENGINE_ID)
-
-
-# _search_params = {
-#     'q': 'Guacamole',
-#     'num': 10,
-#     'fileType': 'jpg',
-#     'rights': 'cc_publicdomain',
-#     'safe': 'active', ##
-#     'imgType': 'photo', ##
-#     'imgSize': 'large', ##
-#     'imgDominantColor': 'imgDominantColorUndefined', ##
-#     'imgColorType': 'color' ##
-# }
-
-# # this will only search for images:
-# gis.search(search_params=_search_params)
-
-# for image in gis.results():
-#     if "wiki" in image.url:
-#         print(image.url)
-    
+    # return bot_response
+    try:
+        bot_response = bot_response.split("```json")[1]
+        bot_response = bot_response.split("```")[0]
+        print(bot_response)
+        bot_response = json.loads(bot_response)
+        print(bot_response)
+        for key in bot_response:
+            for key2 in bot_response[key]:
+                bot_response[key][key2]['dish_url'] = "https://www.google.com/search?q=" + bot_response[key][key2]['dish_name']
+        return bot_response
+    except Exception as e:
+        return {"error": f"Error in generating diet plan {e}"}
+    #             _search_params = {
+    #                 'q': '',
+    #                 'num': 1,
+    #                 'fileType': 'jpg',
+    #                 'rights': 'cc_publicdomain',
+    #                 'safe': 'active', ##
+    #                 'imgType': 'photo', ##
+    #                 'imgSize': 'large', ##
+    #                 'imgDominantColor': 'imgDominantColorUndefined', ##
+    #                 'imgColorType': 'color' ##
+    #             }
+    #             _search_params['q'] = bot_response[key][key2]['dish_name']
+    #             gis.search(search_params=_search_params)
+    #             for image in gis.results():
+    #                 if "wiki" in image.url:
+    #                     bot_response[key][key2]['image_url'] = image.url
+    #                     break
+            
+    #     return bot_response
+    # except Exception as e:
+    #     return {"error": "Error in generating diet plan"}
+       
+        
