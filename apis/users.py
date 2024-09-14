@@ -5,7 +5,7 @@ users_api = Blueprint('users', __name__)
 
 
 
-@users_api.route("/set/profile", methods=["POST"])  # set profile 
+@users_api.route("/api/profile", methods=["POST"])  # set profile 
 def setprofile():
     '''
         To set data about the user
@@ -19,17 +19,23 @@ def setprofile():
                     status=200)
 
 
-@users_api.route("/get/profile/<username>", methods=["GET"])  # view profile 
+@users_api.route("/api/profile/<username>", methods=["GET"])  # view profile 
 def getprofile(username):
     '''
         To get data about the user
     '''
-    
     if username:
-        response_payload = get_user({"user_name":username})
-        return Response(json.dumps(response_payload),
-                        mimetype="application/json",
-                        status=200)
+        try:
+            query = {"user_name": username}
+            response_payload = get_user(query)
+            return Response(json.dumps(response_payload),
+                            mimetype="application/json",
+                            status=200)
+        except Exception as e:
+            response_payload = {"message": str(e)}
+            return Response(json.dumps(response_payload),
+                            mimetype="application/json",
+                            status=404)
     else:
         response_payload = "Url param username is missing."
         return Response(json.dumps(response_payload),

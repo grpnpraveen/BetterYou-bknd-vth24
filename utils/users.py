@@ -12,22 +12,22 @@ def register_users(data):
                     "mobile":str,
                     "address":str,
                     "gender":str,
-                    "age":int,
+                    "age":str,
                     "religion":str,
                     "sex":str,
                     "occupation":str,
-                    "height":int,
-                    "weight":int,
+                    "height":str,
+                    "weight":str,
                     "medical_condition":str,
                     "mental_health":str,
                     "physical_activity_level":str,
                     "habits":str,
-                    "time_comitment":int,
+                    "time_comitment":str,
                     "preferred_food":str,
                     "preferred_cusine":str,
                     "preferred_exercise":str,
-                    "ideal_weight":int,
-                    "ideal_fitness_level":int
+                    "ideal_weight":str,
+                    "ideal_fitness_level":str
                    }
 
     validation_messages = validator.validate_datatype(validations, data)
@@ -60,7 +60,7 @@ def register_users(data):
     else:
         payload =  add_user(data)
         response_payload = {
-                            "message":"add user successfully",
+                            "message":"added user successfully",
                             "response":True,
                            }
         return response_payload
