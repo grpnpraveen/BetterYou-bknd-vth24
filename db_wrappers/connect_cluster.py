@@ -2,12 +2,7 @@ import pymongo
 from pymongo import MongoClient
 from config import CLUTER_NAME, CLUTER_PASSWORD
 
-
-db = cluster["UserData"]
-collection = db["Flask_mongo"]
-
-class ConnectDatabase:
-
+class ConnectCluster:
 
     def __init__(self):
         """configure database"""

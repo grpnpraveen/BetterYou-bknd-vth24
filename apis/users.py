@@ -1,5 +1,5 @@
 from flask import Blueprint,request,json,Response
-
+from db_wrappers.connect_cluster import ConnectCluster
 users_api = Blueprint('users', __name__)
 
 
@@ -9,9 +9,12 @@ def getprofile():
     '''
         To get data about the patient or the doctor
     '''
+    cluster = ConnectCluster()
+    collection = cluster.get_collection("betteryou", "users")
+    data = collection.list_documents()
     response_payload = {
                         "message": "Data found",
-                                   
+                        "data": data,
                         "response": True
                         }
                         
