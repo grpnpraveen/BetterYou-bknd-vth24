@@ -51,7 +51,7 @@ def create_user_prefix_prompt(data):
 
 def generate_recipe_recommendation(user_details_prefix_prompt, user_prompt=None):
     if user_prompt is None:
-        user_prompt = ". Can you please provide some diet and food recommendations? Put the schedule in a json format for all days in the week. No other keys in the json instead of days of the week. Make sure there are not json decode error. Fill it with dishes closer to my preference. Don't leave it half empty and add comments like continue for the rest of the week/ similar to the otherday. do not add comments. example: {\'monday':{\'breakfast':{\'time':'', 'dish_name':etc...'}\}\}."
+        user_prompt = ". Can you please provide some diet and food recommendations? Put the schedule in a json format for all days in the week. No other keys in the json instead of days of the week. Make sure there are not json decode error. Fill it with dishes closer to my preference. Don't leave it half empty and add comments like continue for the rest of the week/ similar to the otherday. Strictly, do not add comments. example: {\'monday':{\'breakfast':{\'time':'', 'dish_name':etc...'}\}\}."
     bot_input = user_details_prefix_prompt + user_prompt
 
 
