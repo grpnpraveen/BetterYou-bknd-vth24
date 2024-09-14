@@ -3,7 +3,7 @@ from utils.input_validator import validator
 from exceptions import CustomErrors
 
 global required_fields
-required_fields = ["user_name", "email", "mobile", "gender", "age", "religion", "sex", "height", "weight", "medical_condition", "mental_health", "habits", "preferred_food", "ideal_weight", "ideal_fitness_level"]
+required_fields = ["user_name", "email", "mobile", "gender", "age", "religion", "country", "sex", "height", "weight", "medical_condition", "mental_health", "habits", "preferred_food", "ideal_weight", "ideal_fitness_level"]
 
 def register_users(data):
     validations = {
@@ -11,6 +11,7 @@ def register_users(data):
                     "email":str,                    
                     "mobile":str,
                     "address":str,
+                    "country":str,
                     "gender":str,
                     "age":str,
                     "religion":str,
