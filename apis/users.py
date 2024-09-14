@@ -1,23 +1,38 @@
 from flask import Blueprint,request,json,Response
-from db_wrappers.connect_cluster import ConnectCluster
+from utils.users import register_users, get_user
+
 users_api = Blueprint('users', __name__)
 
 
 
-@users_api.route("/get/profile", methods=["GET"])  # view profile 
-def getprofile():
+@users_api.route("/set/profile", methods=["POST"])  # set profile 
+def setprofile():
     '''
-        To get data about the patient or the doctor
+        To set data about the user
     '''
-    cluster = ConnectCluster()
-    collection = cluster.get_collection("betteryou", "users")
-    data = collection.list_documents()
-    response_payload = {
-                        "message": "Data found",
-                        "data": data,
-                        "response": True
-                        }
-                        
+    user_data = request.get_json()
+
+    response_payload = register_users(user_data)
+     
     return Response(json.dumps(response_payload),
                     mimetype="application/json",
                     status=200)
+
+
+@users_api.route("/get/profile/<username>", methods=["GET"])  # view profile 
+def getprofile(username):
+    '''
+        To get data about the user
+    '''
+    
+    if username:
+        response_payload = get_user(username)
+        return Response(json.dumps(response_payload),
+                        mimetype="application/json",
+                        status=200)
+    else:
+        response_payload = "Url param username is missing."
+        return Response(json.dumps(response_payload),
+                        mimetype="application/json",
+                        status=404)
+
