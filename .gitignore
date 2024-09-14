@@ -1,3 +1,4 @@
 .env
 git-access
 **/__pycache__/**
+.env

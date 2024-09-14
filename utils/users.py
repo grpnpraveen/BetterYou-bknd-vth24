@@ -6,7 +6,6 @@ global required_fields
 required_fields = ["user_name", "email", "mobile", "gender", "age", "religion", "sex", "height", "weight", "medical_condition", "mental_health", "habits", "preferred_food", "ideal_weight", "ideal_fitness_level"]
 
 def register_users(data):
-
     validations = {
                     "user_name": str,
                     "email":str,                    
@@ -32,6 +31,8 @@ def register_users(data):
                    }
 
     validation_messages = validator.validate_datatype(validations, data)
+
+    print(validation_messages)
 
     if len(validation_messages):
             raise CustomErrors(validation_messages)
