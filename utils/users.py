@@ -6,7 +6,6 @@ global required_fields
 required_fields = ["user_name", "email", "mobile", "gender", "age", "religion", "sex", "height", "weight", "medical_condition", "mental_health", "habits", "preferred_food", "ideal_weight", "ideal_fitness_level"]
 
 def register_users(data):
-
     validations = {
                     "user_name": str,
                     "email":str,                    
@@ -18,7 +17,7 @@ def register_users(data):
                     "sex":str,
                     "occupation":str,
                     "height":int,
-                    "weight":str,
+                    "weight":int,
                     "medical_condition":str,
                     "mental_health":str,
                     "physical_activity_level":str,
@@ -32,6 +31,8 @@ def register_users(data):
                    }
 
     validation_messages = validator.validate_datatype(validations, data)
+
+    print(validation_messages)
 
     if len(validation_messages):
             raise CustomErrors(validation_messages)
@@ -50,7 +51,7 @@ def register_users(data):
         raise CustomErrors(mobile_error)
     
 
-    if find_record({user_name = data["user_name"]}) != "new":
+    if find_record({"user_name":  data["user_name"]}) != "new":
         response_payload = {"message": "username already existed, try another.",
                             "response": False,
                             }
@@ -67,7 +68,6 @@ def register_users(data):
     
 
 def get_user(query):
-
     response = get_user_profile(query)
     if response:
         response_payload = {

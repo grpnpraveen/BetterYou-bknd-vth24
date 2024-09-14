@@ -26,7 +26,7 @@ def getprofile(username):
     '''
     
     if username:
-        response_payload = get_user(username)
+        response_payload = get_user({"user_name":username})
         return Response(json.dumps(response_payload),
                         mimetype="application/json",
                         status=200)
