@@ -1,12 +1,14 @@
 # Driver File (Brains)
 from flask import Flask, request, sessions, redirect, session, g, Response, flash
 from apis.users import users_api
+from apis.ollama_chat import generate_api
 from flask_cors import CORS
 
 app = Flask(__name__)
 CORS(app)
 
 app.register_blueprint(users_api)
+app.register_blueprint(generate_api)
 
 
 @app.route("/", methods=['GET', 'POST'])

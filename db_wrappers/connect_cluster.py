@@ -1,12 +1,12 @@
 import pymongo
 from pymongo import MongoClient
-from config import CLUTER_NAME, CLUTER_PASSWORD
+import os
 
 class ConnectCluster:
 
     def __init__(self):
         """configure database"""
-        self.cluster = MongoClient("mongodb+srv://"+CLUTER_NAME+":"+CLUTER_PASSWORD+"@cluster0.rqeps.mongodb.net/")
+        self.cluster = MongoClient("mongodb+srv://"+os.environ["CLUSTER_NAME"]+":"+os.environ["CLUTER_PASSWORD"]+"@cluster0.rqeps.mongodb.net/")
     
     def get_db(self,dbname):
         """Retrieve a database"""

@@ -13,22 +13,22 @@ def register_users(data):
                     "mobile":str,
                     "address":str,
                     "gender":str,
-                    "age":int,
+                    "age":str,
                     "religion":str,
                     "sex":str,
                     "occupation":str,
-                    "height":int,
+                    "height":str,
                     "weight":str,
                     "medical_condition":str,
                     "mental_health":str,
                     "physical_activity_level":str,
                     "habits":str,
-                    "time_comitment":int,
+                    "time_comitment":str,
                     "preferred_food":str,
                     "preferred_cusine":str,
                     "preferred_exercise":str,
-                    "ideal_weight":int,
-                    "ideal_fitness_level":int
+                    "ideal_weight":str,
+                    "ideal_fitness_level":str
                    }
 
     validation_messages = validator.validate_datatype(validations, data)
@@ -50,7 +50,7 @@ def register_users(data):
         raise CustomErrors(mobile_error)
     
 
-    if find_record({user_name = data["user_name"]}) != "new":
+    if find_record({"user_name":  data["user_name"]}) != "new":
         response_payload = {"message": "username already existed, try another.",
                             "response": False,
                             }
@@ -59,7 +59,7 @@ def register_users(data):
     else:
         payload =  add_user(data)
         response_payload = {
-                            "message":"add user successfully",
+                            "message":"added user successfully",
                             "response":True,
                            }
         return response_payload
@@ -67,7 +67,6 @@ def register_users(data):
     
 
 def get_user(query):
-
     response = get_user_profile(query)
     if response:
         response_payload = {
