@@ -10,7 +10,7 @@ from datetime import datetime, timedelta
 # import traceback
 
 from utils.users import register_users, get_user
-
+from apis.tasks import create_tasks
 
 generate_api = Blueprint('model', __name__)
 
@@ -51,8 +51,10 @@ def generate_diet_plan(username):
     print(diet_plan)
     if diet_plan.get("status") != "error":
         update_user_record({"user_name": username}, {"diet_plan": diet_plan, "type": "diet_plan"})
+        create_tasks(diet_plan,True,username)
     else:
         diet_plan = get_user_profile({"user_name": username}).get("diet_plan")
+        create_tasks(diet_plan,True,username)
     return Response(json.dumps(diet_plan),
                     mimetype="application/json",
                     status=200)
@@ -127,9 +129,11 @@ def generate_workout_recommendation(username):
         workout_recommendation = generate_workout_recommendation(user_details_prefix_prompt)
         if workout_recommendation.get("status") != "error":
             update_user_record({"user_name": username}, {"workout_plan": workout_recommendation, "type": "workout_plan"})
+            create_tasks(workout_recommendation,False,username)
         else:
             workout_recommendation = get_user_profile({"user_name": username})
-            # print(workout_recommendation, "**********************")
+            workout_recommendation = workout_recommendation.get("workout_plan")
+            create_tasks(workout_recommendation,False,username)
 
         return Response(json.dumps(workout_recommendation),
                         mimetype="application/json",
