@@ -53,7 +53,7 @@ BetterYou is a comprehensive web application focused on promoting healthy eating
 
 3. Set up MongoDB Atlas:
 
-    Create a MongoDB Atlas account, set up a cluster, and update the config.py file with your database credentials.
+    Create a MongoDB Atlas account, set up a cluster, and add the .env file with your database credentials.
 
 4. Access the app:
     Open your browser and navigate to https://betteryou.wiki
