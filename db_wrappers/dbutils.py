@@ -29,6 +29,7 @@ def add_user(data):
     try:
         db_connection = ConnectCluster()
         collection = db_connection.get_collection("betteryou","users")
+        data["rewards"] = 0
         res = collection.insert_one(data)
         print(res)
     except Exception as e:
@@ -121,6 +122,105 @@ def update_ngrok_url(url):
 
     except Exception as e:
         raise Exception(f"Unknown Error occurred: {e}", 500)
+
+    finally:
+        db_connection.close_connection()
+
+
+def insert_or_update_tasks(user_name,tasks):
+    try:
+        db_connection = ConnectCluster()
+
+        collection = db_connection.get_collection("betteryou","tasks")
+        task_query = {"user_name": user_name}
+        update_query = {}
+        for date, task_list in tasks.items():
+            update_query[f"tasks.{date}"] = task_list  # Set tasks for the specific date
+
+        # Perform the upsert operation (insert if doesn't exist, update if exists)
+        result = collection.update_one(
+            task_query,                # Find the document by user ID
+            {"$set": update_query},    # Set the tasks for each date
+            upsert=True                # Insert if the document does not exist
+        )
+
+        return "tasks updated successfully"
+
+    except Exception as e:
+        raise Exception(f"Unknown Error occurred i.e {e}", 500)
+
+    finally:
+        db_connection.close_connection()
+
+
+
+def get_task_for(user_name):
+    try:
+        db_connection = ConnectCluster()
+
+        collection = db_connection.get_collection("betteryou","tasks")
+        task_query = {"user_name": user_name}
+        
+        user_document = collection.find_one(task_query)
+
+        return user_document
+
+    except Exception as e:
+        raise Exception(f"Unknown Error occurred i.e {e}", 500)
+
+    finally:
+        db_connection.close_connection()
+
+def get_task_by_date(user_name,date):
+    try:
+        db_connection = ConnectCluster()
+
+        collection = db_connection.get_collection("betteryou","tasks")
+        task_query = {"user_name": user_name}
+        
+        user_document = collection.find_one(task_query).get("tasks",[])
+
+        return dict(user_document).get(date)
+
+    except Exception as e:
+        raise Exception(f"Unknown Error occurred i.e {e}", 500)
+
+    finally:
+        db_connection.close_connection()
+
+
+def remove_task(user_name,date,task_name,point):
+    try:
+        db_connection = ConnectCluster()
+
+        query = {"user_name": user_name}
+        collection = db_connection.get_collection("betteryou","users")
+        collection.update_one(query, {"$set": {"rewards": str(int(get_user_profile(query)["rewards"])+int(point)) }})
+        collection = db_connection.get_collection("betteryou","tasks")
+        
+        collection.update_many(
+            {
+                "user_name": user_name,
+                f"tasks.{date}.task_name": task_name
+            },
+            {
+                "$pull": {
+                    f"tasks.{date}": { "task_name": task_name }
+                }
+            }
+        )
+        # task_query = {"user_name": user_name}
+        
+        # user_document = collection.find_one(task_query).get("tasks",[])
+
+        # collection.updateMany(
+        # task_query,  
+        # { "$pull": { "tasks.date": { task_name:  task_name} } })
+
+        return "removed successfully"
+
+    except Exception as e:
+        raise Exception(f"Unknown Error occurred i.e {e}", 500)
 
     finally:
         db_connection.close_connection()

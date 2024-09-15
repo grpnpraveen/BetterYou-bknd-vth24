@@ -2,6 +2,7 @@
 from flask import Flask, request, sessions, redirect, session, g, Response, flash
 from apis.users import users_api
 from apis.ollama_chat import generate_api
+from apis.tasks import tasks_api
 from flask_cors import CORS
 from flask_ngrok import run_with_ngrok
 from db_wrappers.dbutils import update_ngrok_url
@@ -27,6 +28,7 @@ CORS(app)
 
 app.register_blueprint(users_api)
 app.register_blueprint(generate_api)
+app.register_blueprint(tasks_api)
 
 @app.route("/", methods=['GET', 'POST'])
 def index():
@@ -50,3 +52,4 @@ if __name__ == "__main__":
     threading.Thread(target=retrieve_ngrok_url, daemon=True).start()
     # Run the Flask app
     app.run()
+
