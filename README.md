@@ -26,7 +26,7 @@ BetterYou is a comprehensive web application focused on promoting healthy eating
 
 ## Technology Stack
 
-![Tech Stack](https://github.com/grpnpraveen/BetterYou-bknd-vth24/blob/main/2.png)
+<img src="https://github.com/grpnpraveen/BetterYou-bknd-vth24/blob/main/2.png" alt="BetterYou Tech stack" width="350"/>
 
 - **Backend Framework**: Flask with Blueprint architecture
 - **Database**: MongoDB Atlas
