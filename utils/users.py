@@ -3,13 +3,13 @@ from utils.input_validator import validator
 from exceptions import CustomErrors
 
 global required_fields
-required_fields = ["user_name", "email", "mobile", "gender", "age", "religion", "country", "sex", "height", "weight", "medical_condition", "mental_health", "habits", "preferred_food", "ideal_weight", "ideal_fitness_level"]
+required_fields = ["user_name", "email", "gender", "age", "religion", "country", "sex", "height", "weight", "medical_condition", "habits", "preferred_food", "ideal_weight", "ideal_fitness_level", "diet_plan", "workout_plan"]
 
 def register_users(data):
     validations = {
                     "user_name": str,
                     "email":str,                    
-                    "mobile":str,
+                    # "mobile":str,
                     "address":str,
                     "country":str,
                     "gender":str,
@@ -20,7 +20,7 @@ def register_users(data):
                     "height":str,
                     "weight":str,
                     "medical_condition":str,
-                    "mental_health":str,
+                    # "mental_health":str,
                     "physical_activity_level":str,
                     "habits":str,
                     "time_comitment":str,
@@ -28,7 +28,9 @@ def register_users(data):
                     "preferred_cusine":str,
                     "preferred_exercise":str,
                     "ideal_weight":str,
-                    "ideal_fitness_level":str
+                    "ideal_fitness_level":str,
+                    "diet_plan":dict,
+                    "workout_plan":dict
                    }
 
     validation_messages = validator.validate_datatype(validations, data)
@@ -46,10 +48,9 @@ def register_users(data):
     if email_error:
         raise CustomErrors(email_error)
 
-    mobile_error = validator.validate_mobile(mobile=data['mobile'],
-                                             length=10)
-    if mobile_error:
-        raise CustomErrors(mobile_error)
+    # mobile_error = validator.validate_mobile(mobile=data['mobile'], length=10)
+    # if mobile_error:
+        # raise CustomErrors(mobile_error)
     
 
     if find_record({"user_name":  data["user_name"]}) != "new":
