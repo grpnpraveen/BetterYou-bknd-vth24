@@ -14,7 +14,7 @@ BetterYou is a comprehensive web application focused on promoting healthy eating
 - [Reward System](#reward-system)
 - [Analytics](#analytics)
 
-
+- Presentatioon : https://www.canva.com/design/DAGQ0tg3s4Y/HNGLBUQOz-xB4Rt8Jq6Ndg/edit?utm_content=DAGQ0tg3s4Y&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton 
 ## Features
 
 - Personalized diet plans based on user preferences and health goals
