@@ -15,15 +15,15 @@ import threading
 app = Flask(__name__)
 
 # Ensure ngrok binary has execute permissions
-ngrok_path = "/snap/bin/ngrok"  # Update this path to the actual location of your ngrok binary
-if not os.access(ngrok_path, os.X_OK):
-    try:
-        os.chmod(ngrok_path, 0o755)
-    except PermissionError as e:
-        logging.error(f"Failed to set execute permissions for ngrok: {e}")
-        raise
+# ngrok_path = "/snap/bin/ngrok"  # Update this path to the actual location of your ngrok binary
+# if not os.access(ngrok_path, os.X_OK):
+#     try:
+#         os.chmod(ngrok_path, 0o755)
+#     except PermissionError as e:
+#         logging.error(f"Failed to set execute permissions for ngrok: {e}")
+#         raise
 
-run_with_ngrok(app)
+# run_with_ngrok(app)
 CORS(app)
 
 app.register_blueprint(users_api)
@@ -49,7 +49,7 @@ def retrieve_ngrok_url():
 
 if __name__ == "__main__":
     # Start the thread to retrieve the ngrok URL
-    threading.Thread(target=retrieve_ngrok_url, daemon=True).start()
+    # threading.Thread(target=retrieve_ngrok_url, daemon=True).start()
     # Run the Flask app
     app.run()
 
