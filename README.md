@@ -13,7 +13,6 @@ BetterYou is a comprehensive web application focused on promoting healthy eating
 - [Diet and Workout Plan Generation](#diet-and-workout-plan-generation)
 - [Reward System](#reward-system)
 - [Analytics](#analytics)
-- [API Documentation](#api-documentation)
 
 
 ## Features
@@ -57,7 +56,7 @@ BetterYou is a comprehensive web application focused on promoting healthy eating
     Create a MongoDB Atlas account, set up a cluster, and update the config.py file with your database credentials.
 
 4. Access the app:
-    Open your browser and navigate to http://localhost:5000.
+    Open your browser and navigate to https://betteryou.wiki
 
    
 ### Diet and Workout Plan Generation
@@ -111,9 +110,5 @@ BetterYou utilizes MongoDB Atlas Charts to gain insights into user data, track d
 
 - **Progress Over Time:** Track user progress over time by visualizing changes in fitness levels, weight, and other relevant metrics. This allows users and administrators to see long-term trends and the impact of interventions.
 
-
-## API Documentation
-
-BetterYou provides a RESTful API to interact with user data, retrieve personalized diet and workout plans, and check reward points. Below are the available endpoints and their functionalities:
 
    
