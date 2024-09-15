@@ -56,6 +56,7 @@ def register_users(data):
     if find_record({"user_name":  data["user_name"]}) != "new":
         response_payload = {"message": "username already existed, try another.",
                             "response": False,
+                            "status": "failed"
                             }
         return response_payload
 
@@ -64,6 +65,7 @@ def register_users(data):
         response_payload = {
                             "message":"added user successfully",
                             "response":True,
+                            "status":"success"
                            }
         return response_payload
 
@@ -75,12 +77,14 @@ def get_user(query):
         response_payload = {
                             "data":response,
                             "response":True,
+                            "status":"success"
                            }
         return response_payload
 
     response_payload = {
                          "message":"User Not Found",
                          "response":False,
+                            "status":"failed"
                            }
     return response_payload
     

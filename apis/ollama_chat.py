@@ -5,7 +5,7 @@ import ollama
 from config import Config
 from google_images_search import GoogleImagesSearch
 from flask import Blueprint, request, json, Response
-from db_wrappers.dbutils import update_user_record, find_record
+from db_wrappers.dbutils import update_user_record, get_user_profile
 from datetime import datetime, timedelta
 # import traceback
 
@@ -35,7 +35,7 @@ def format_dates(data):
 
     return data
 
-@generate_api.route("/api/generate_diet_plan/<username>", methods=["GET"])
+@generate_api.route("/api/generate_diet_plan/<username>", methods=["POST"])
 def generate_diet_plan(username):
     '''
         To generate diet plan
@@ -43,6 +43,7 @@ def generate_diet_plan(username):
 
     user_details = get_user({"user_name": username})
     request_json = request.get_json()
+    print(request_json)
     user_prompt = request_json.get("user_prompt")
 
     user_details_prefix_prompt = create_user_prefix_prompt(user_details, "diet_plan")
@@ -51,7 +52,7 @@ def generate_diet_plan(username):
     if diet_plan.get("status") != "error":
         update_user_record({"user_name": username}, {"diet_plan": diet_plan, "type": "diet_plan"})
     else:
-        diet_plan = find_record({"user_name": username}).get("diet_plan")
+        diet_plan = get_user_profile({"user_name": username}).get("diet_plan")
     return Response(json.dumps(diet_plan),
                     mimetype="application/json",
                     status=200)
@@ -113,22 +114,30 @@ def generate_recipe_recommendation(user_details_prefix_prompt, user_prompt=None)
         return {"error": f"Error in generating diet plan {e}", "status": "error"}
 
 
-@generate_api.route("/api/generate_workout_recommendation/<username>", methods=["GET"])
+@generate_api.route("/api/generate_workout_recommendation/<username>", methods=["POST"])
 def generate_workout_recommendation(username):
     '''
         To generate workout recommendation
     '''
 
     user_details = get_user({"user_name": username})
-    user_details_prefix_prompt = create_user_prefix_prompt(user_details, "workout_plan")
-    workout_recommendation = generate_workout_recommendation(user_details_prefix_prompt)
-    if workout_recommendation.get("status") != "error":
-        update_user_record({"user_name": username}, {"workout_plan": workout_recommendation, "type": "workout_plan"})
+    print(user_details)
+    if user_details:
+        user_details_prefix_prompt = create_user_prefix_prompt(user_details, "workout_plan")
+        workout_recommendation = generate_workout_recommendation(user_details_prefix_prompt)
+        if workout_recommendation.get("status") != "error":
+            update_user_record({"user_name": username}, {"workout_plan": workout_recommendation, "type": "workout_plan"})
+        else:
+            workout_recommendation = get_user_profile({"user_name": username})
+            # print(workout_recommendation, "**********************")
+
+        return Response(json.dumps(workout_recommendation),
+                        mimetype="application/json",
+                        status=200)
     else:
-        workout_recommendation = find_record({"user_name": username}).get("workout_plan")
-    return Response(json.dumps(workout_recommendation),
-                    mimetype="application/json",
-                    status=200)
+        return Response(json.dumps({"error": "User not found"}),
+                        mimetype="application/json",
+                        status=404)
 
 def generate_workout_recommendation(user_details_prefix_prompt, user_prompt=None):
     if user_prompt is None:
